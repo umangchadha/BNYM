@@ -1,0 +1,140 @@
+<mat-toolbar color="primary"
+  fxLayout
+  fxLayoutAlign="space-between center">
+  <span fxFlex=30
+    class="fill-remaining-space">General BNYM Form</span>
+</mat-toolbar>
+
+<div class="container"
+  novalidate>
+  <p fxLayout
+    fxLayoutAlign="start">Fill the form values to see the ID and Image referesh</p>
+  <mat-divider></mat-divider>
+  <!-- Form Begins -->
+  <form fxLayout="row wrap"
+    fxLayoutGap="30px"
+    [formGroup]="formGroup"
+    (ngSubmit)="onSubmit(formGroup.value)"
+    class="form">
+
+    <!-- ISIN Begins-->
+    <mat-form-field fxFlex="30"
+      class="form-element">
+      <input matInput
+        placeholder="ISIN"
+        type="text"
+        formControlName="isin"
+        maxlength="12"
+        pattern="[a-zA-Z0-9]*"
+        required>
+      <mat-error *ngIf="!formGroup.controls['isin'].valid && formGroup.controls['isin'].touched">
+        {{ requiredField }}
+        & ISIN should be of 12 characters and Alphanumeric. Should not support special characters.
+      </mat-error>
+    </mat-form-field>
+    <!-- ISIN Ends-->
+
+    <!-- Account Number Begins-->
+    <mat-form-field fxFlex="30"
+      class="form-element">
+      <input matInput
+        placeholder="Account No"
+        type="number"
+        formControlName="accNo"
+        required>
+      <mat-error *ngIf="!formGroup.controls['accNo'].valid && formGroup.controls['accNo'].touched">
+        {{ requiredField }}
+      </mat-error>
+    </mat-form-field>
+    <!-- Account Number Ends-->
+
+    <!-- Date Begins-->
+    <mat-form-field fxFlex="30">
+      <input matInput
+        [matDatepicker]="tradeDate"
+        placeholder="Trade Date"
+        formControlName="date"
+        required>
+      <mat-datepicker-toggle matSuffix
+        [for]="tradeDate"></mat-datepicker-toggle>
+      <mat-datepicker #tradeDate></mat-datepicker>
+      <mat-error *ngIf="!formGroup.controls['date'].valid && formGroup.controls['date'].touched">
+        {{ requiredField }} & Trade date should be of format MM/DD/YYYY.
+      </mat-error>
+    </mat-form-field>
+    <!-- Date Ends-->
+
+    <!-- PSET Begins-->
+    <mat-form-field fxFlex="30">
+      <mat-label>Select PSET...</mat-label>
+      <mat-select formControlName="pset">
+        <mat-option value="DICYUS33">DICYUS33</mat-option>
+        <mat-option value="DICYUS33">DICYUS33</mat-option>
+        <mat-option value="DFMTAEA1">DFMTAEA1</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- PSET Ends-->
+
+    <!-- Country Code Begins-->
+    <mat-form-field fxFlex="30"
+      class="form-element">
+      <input matInput
+        placeholder="Country Code"
+        type="text"
+        formControlName="ccode">
+    </mat-form-field>
+    <!-- Country Code Ends-->
+
+    <!-- Submit Button-->
+    <div class="form-element"
+      fxFlex="100">
+      <button mat-raised-button
+        color="primary"
+        type="submit"
+        class="button"
+        [disabled]="!formGroup.valid">Submit Form</button>
+    </div>
+  </form>
+</div>
+
+
+<div class="container"
+  fxLayout=row
+  fxLayoutAlign="space-between">
+
+  <!-- post request data begins -->
+  <div fxFlex=30>
+    <mat-toolbar>Request</mat-toolbar>
+    {{ formRawValue | json }}
+  </div>
+
+  <!-- post request data ends -->
+
+  <!-- API response card begins -->
+  <mat-card class="example-card"
+    fxFlex=30>
+    <mat-card-header>
+      <div mat-card-avatar
+        class="example-header-image"
+        [ngStyle]="{'background-image': 'url(' + imageUrl + ')'}">
+      </div>
+      <mat-card-title>Response </mat-card-title>
+      <mat-card-subtitle>Picture Changes everytime user hits the api</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content fxLayout="row wrap">
+      <div *ngIf="!response ; else res"> NO DATA RETRIEVED</div>
+      <div #res
+        *ngFor="let item of response | keyvalue"
+        fxFlex=50>
+        <b>{{item.key}}</b> : {{item.value}}
+      </div>
+    </mat-card-content>
+    <img mat-card-image
+      [src]="imageUrl"
+      alt="Random yellow flower picture">
+
+
+  </mat-card>
+  <!-- API response card ends -->
+
+</div>
